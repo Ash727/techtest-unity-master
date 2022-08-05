@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour
     private Text _betAmountLabel;
     private TMPro.TMP_InputField _betAmounText;
 
-    private Text _resultsPanel;
+    private Text _resultsText;
 
     void Awake()
 	{
@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
 		_betAmountLabel = transform.Find ("Canvas/BetAmount").GetComponent<Text>();
 		_betAmounText = transform.Find("Canvas/BetAmount/BetInputField").GetComponent<TMPro.TMP_InputField>();
 
-		_resultsPanel = transform.Find ("Canvas/Winner").GetComponent<Text>();
+		_resultsText = transform.Find ("Canvas/Winner").GetComponent<Text>();
 	}
 
 	void Start()
@@ -112,7 +112,7 @@ public class GameController : MonoBehaviour
 		_player.ChangeCoinAmount((int)gameUpdateData["coinsAmountChange"]);
 
 		//_resultsPanel.text = ((Result)gameUpdateData["drawResult"] == Result.Won) ? "Congratulations Player Wins": "Y";
-		_resultsPanel.text = UIResultMsg.GetResultMsg((Result)gameUpdateData["drawResult"]);
+		_resultsText.text = UIResultMsg.GetResultMsg((Result)gameUpdateData["drawResult"], _resultsText);
 	}
 	
 
