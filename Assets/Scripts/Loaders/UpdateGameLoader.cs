@@ -6,11 +6,15 @@ public class UpdateGameLoader
 {
 	public delegate void OnLoadedAction(Hashtable gameUpdateData);
 	public event OnLoadedAction OnLoaded;
+
+	private Result _drawResult; 
     public int BetAmount { get
         {
 			return Player.GetBet();
         }
 	}
+
+   
 
     public Player Player { get; internal set; }
 
@@ -30,18 +34,19 @@ public class UpdateGameLoader
 		mockGameUpdate["resultPlayer"] = _choice;
 		mockGameUpdate["resultOpponent"] = opponentHand;
 		mockGameUpdate["coinsAmountChange"] = GetCoinsAmount(_choice, opponentHand);
+		mockGameUpdate["drawResult"] = _drawResult;
 		OnLoaded(mockGameUpdate);
 	}
 
 	private int GetCoinsAmount (UseableItem playerHand, UseableItem opponentHand)
 	{
-		Result drawResult = ResultAnalyzer.GetResultState(playerHand, opponentHand);
+		_drawResult = ResultAnalyzer.GetResultState(playerHand, opponentHand);
 
-		if (drawResult.Equals (Result.Won))
+		if (_drawResult.Equals (Result.Won))
 		{
 			return BetAmount;
 		}
-		else if (drawResult.Equals (Result.Lost))
+		else if (_drawResult.Equals (Result.Lost))
 		{
 			return -(BetAmount);
 		}

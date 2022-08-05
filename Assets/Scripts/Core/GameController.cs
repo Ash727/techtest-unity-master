@@ -14,12 +14,14 @@ public class GameController : MonoBehaviour
 
 	private Player _player;
     private Text _betAmountLabel;
+    private Text _resultsPanel;
 
     void Awake()
 	{
 		_nameLabel = transform.Find ("Canvas/Name").GetComponent<Text>();
 		_moneyLabel = transform.Find ("Canvas/Money").GetComponent<Text>();
 		_betAmountLabel = transform.Find ("Canvas/BetAmount").GetComponent<Text>();
+		_resultsPanel = transform.Find ("Canvas/Winner").GetComponent<Text>();
 	}
 
 	void Start()
@@ -81,7 +83,11 @@ public class GameController : MonoBehaviour
 		enemyHand.text = DisplayResultAsText((UseableItem)gameUpdateData["resultOpponent"]);
 
 		_player.ChangeCoinAmount((int)gameUpdateData["coinsAmountChange"]);
+
+		//_resultsPanel.text = ((Result)gameUpdateData["drawResult"] == Result.Won) ? "Congratulations Player Wins": "Y";
+		_resultsPanel.text = UIResultMsg.GetResultMsg((Result)gameUpdateData["drawResult"]);
 	}
+	
 
 	private string DisplayResultAsText (UseableItem result)
 	{
