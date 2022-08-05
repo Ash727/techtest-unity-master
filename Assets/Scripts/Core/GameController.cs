@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour
 
 	private Player _player;
     private Text _betAmountLabel;
+    private TMPro.TMP_InputField _betAmounText;
+
     private Text _resultsPanel;
 
     void Awake()
@@ -21,6 +23,8 @@ public class GameController : MonoBehaviour
 		_nameLabel = transform.Find ("Canvas/Name").GetComponent<Text>();
 		_moneyLabel = transform.Find ("Canvas/Money").GetComponent<Text>();
 		_betAmountLabel = transform.Find ("Canvas/BetAmount").GetComponent<Text>();
+		_betAmounText = transform.Find("Canvas/BetAmount/BetInputField").GetComponent<TMPro.TMP_InputField>();
+
 		_resultsPanel = transform.Find ("Canvas/Winner").GetComponent<Text>();
 	}
 
@@ -33,7 +37,12 @@ public class GameController : MonoBehaviour
 
 	void Update()
 	{
-		UpdateHud();
+		if (!_betAmounText.isFocused) { 
+			UpdateHud();
+		} else
+        {
+			GetBetFromField();
+		}
 	}
 
 	public void OnPlayerInfoLoaded(Hashtable playerData)
@@ -42,13 +51,15 @@ public class GameController : MonoBehaviour
 	}
 
 	public void UpdateHud()
-	{
-		_nameLabel.text = "Name: " + _player.GetName();
-		_moneyLabel.text = "Money: $" + _player.GetCoins().ToString();
-		_betAmountLabel.text = $"Bet Amounts:{_player.GetBet().ToString()}";
+    {
+        _nameLabel.text = "Name: " + _player.GetName();
+        _moneyLabel.text = "Money: $" + _player.GetCoins().ToString();
+		_betAmountLabel.text = $"${_player.Bet.ToString()}";
+        _betAmounText.text = ( $" ${_player.Bet.ToString()}");
+
 	}
 
-	public void HandlePlayerInput(int item)
+    public void HandlePlayerInput(int item)
 	{
 		UseableItem playerChoice = UseableItem.None;
 
@@ -66,6 +77,22 @@ public class GameController : MonoBehaviour
 		}
 
 		UpdateGame(playerChoice, _player);
+	}
+
+	public void AdjustBet(bool increase)
+    {
+        if (increase)
+        {
+			_player.Bet++;
+        } else { 
+			_player.Bet--;
+		}
+    }
+
+	public void GetBetFromField()
+    {
+		int.TryParse(_betAmounText.text, out int bet);
+		_player.Bet = bet;
 	}
 
 	private void UpdateGame(UseableItem playerChoice, Player playerData)

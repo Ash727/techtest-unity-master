@@ -9,7 +9,18 @@ public class Player
 	private int _coins;
 	private int _betAmt;
 
-	public Player(Hashtable playerData)
+    public int Bet { 
+		get
+        {
+			return _betAmt;
+        }
+		set
+        {
+			_betAmt = value;
+        }
+	}
+
+    public Player(Hashtable playerData)
 	{
 		_userId = (int)playerData["userId"];
 		_name = playerData["name"].ToString (); 
@@ -36,9 +47,4 @@ public class Player
 	{
 		_coins += amount;
 	}
-
-    public int GetBet ()
-    {
-		return _betAmt;
-    }
 }

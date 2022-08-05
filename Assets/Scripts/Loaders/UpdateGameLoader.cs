@@ -7,14 +7,16 @@ public class UpdateGameLoader
 	public delegate void OnLoadedAction(Hashtable gameUpdateData);
 	public event OnLoadedAction OnLoaded;
 
-	private Result _drawResult; 
-    public int BetAmount { get
+    private Result _drawResult;
+    public int BetAmount
+    {
+        get
         {
-			return Player.GetBet();
+            return Player.Bet;
         }
-	}
+    }
 
-   
+
 
     public Player Player { get; internal set; }
 
@@ -28,7 +30,7 @@ public class UpdateGameLoader
 
 	public void load()
 	{
-		UseableItem opponentHand = (UseableItem)Enum.GetValues(typeof(UseableItem)).GetValue(UnityEngine.Random.Range(0, 4));
+		UseableItem opponentHand = (UseableItem)Enum.GetValues(typeof(UseableItem)).GetValue(UnityEngine.Random.Range(1, 4));
 
 		Hashtable mockGameUpdate = new Hashtable();
 		mockGameUpdate["resultPlayer"] = _choice;
