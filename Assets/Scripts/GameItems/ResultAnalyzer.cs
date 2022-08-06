@@ -14,11 +14,11 @@ public class ResultAnalyzer
 	public static Result GetResultState(UseableItem playerHand, UseableItem enemyHand)
 	{
 
-		if (isStronger(playerHand, enemyHand))
+		if (isStronger2(playerHand, enemyHand))
 		{
 			return Result.Won;
 		}
-		else if (isStronger(enemyHand, playerHand))
+		else if (isStronger2(enemyHand, playerHand))
 		{
 			return Result.Lost;
 		}
@@ -27,6 +27,23 @@ public class ResultAnalyzer
 			return Result.Draw;
 		}
 	}
+
+    private static bool isStronger2(UseableItem firstHand, UseableItem secondHand)
+    {
+		bool isWinner = false;
+        switch (firstHand)
+        {
+            case UseableItem.Rock:
+				isWinner = secondHand == UseableItem.Scissors ? true : false;                
+                break;
+            case UseableItem.Paper:
+				isWinner = secondHand == UseableItem.Rock ? true : false;
+				break;
+            case UseableItem.Scissors:
+				isWinner = secondHand == UseableItem.Paper ? true : false;
+				break;        }
+		return isWinner;
+    }
 
 	private static bool isStronger (UseableItem firstHand, UseableItem secondHand)
 	{

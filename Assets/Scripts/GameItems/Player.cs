@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Linq;
 
 public class Player
 {
@@ -46,5 +47,29 @@ public class Player
 	public void ChangeCoinAmount(int amount)
 	{
 		_coins += amount;
+	}
+
+	public bool CanBet()
+    {
+		var inBetRange = Enumerable.Range(1, _coins).Contains(_betAmt);
+		if(inBetRange &&  (_coins >= _betAmt))
+        {
+			Debug.Log($" Bet within range {inBetRange}");
+			return true;
+        }
+		return false;
+    }
+
+    internal void AdustBet(bool increase)
+    {
+		if (increase)
+		{
+			Bet++;
+		}
+		else
+		{
+				Bet--;
+           
+		}
 	}
 }

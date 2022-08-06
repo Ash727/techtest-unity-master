@@ -24,4 +24,10 @@ public static class UIResultMsg{
         }
         return msg;
     }
+
+    public static void ActivateAlert(GameObject obj)
+    {
+
+        obj.SetActive(true);
+    }
 }
