@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class ModalManager : MonoBehaviour
+public  class ModalManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private List<Modal> _modals;
 
-    // Update is called once per frame
-    void Update()
+
+   
+    public  void ShowModal(string modalName)
     {
-        
+      var modal = _modals.Find(modal => string.Equals(modal.gameObject.name, modalName));
+        modal.gameObject.SetActive(true);
     }
 }

@@ -68,8 +68,12 @@ public class Player
 		}
 		else
 		{
-				Bet--;
-           
-		}
-	}
+            if (Bet > 0)
+            {
+
+                Bet--;
+            }
+
+        }
+    }
 }

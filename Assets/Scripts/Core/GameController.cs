@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
 	private Text _moneyLabel;
     
 	
-	public List<GameObject> _modals;
+	public ModalManager modalManager;
 
 	private Player _player;
     private Text _betAmountLabel;
@@ -30,12 +30,13 @@ public class GameController : MonoBehaviour
 		_moneyLabel = transform.Find ("Canvas/Money").GetComponent<Text>();
 		_betAmountLabel = transform.Find ("Canvas/BetAmount").GetComponent<Text>();
 		_betAmounText = transform.Find("Canvas/BetAmount/BetInputField").GetComponent<TMPro.TMP_InputField>();
-
 		_resultsText = transform.Find ("Canvas/Winner").GetComponent<Text>();
 	}
 
 	void Start()
 	{
+		modalManager = FindObjectOfType<ModalManager>();
+
 		PlayerInfoLoader playerInfoLoader = new PlayerInfoLoader();
 		playerInfoLoader.OnLoaded += OnPlayerInfoLoaded;
 		playerInfoLoader.load();
@@ -70,8 +71,8 @@ public class GameController : MonoBehaviour
 	{
         if (!_player.CanBet())
         {
-            _modals[0].SetActive(true);
-            return;
+			modalManager.ShowModal("InsufficantFundsModal");
+			return;
         }
 
         UseableItem playerChoice = UseableItem.None;
@@ -95,7 +96,7 @@ public class GameController : MonoBehaviour
 
 	public void AdjustBet(bool increase)
 	{
-		if (_player.CanBet())
+		//if (_player.CanBet())
         {
 			_player.AdustBet(increase);
 			
@@ -113,6 +114,11 @@ public class GameController : MonoBehaviour
         else
         {
             int.TryParse(_betAmounText.text, out int bet);
+            if (bet<0)
+            {
+				_betAmounText.text = "0";
+				bet = 0;
+            }
 			_player.Bet = bet;
 		}
         
