@@ -7,8 +7,10 @@ public class Player
 {
 	private int _userId;
 	private string _name;
-	private int _coins;
+    private int _userLevel;
+    private int _coins;
 	private int _betAmt;
+	
 
     public int Bet { 
 		get
@@ -24,7 +26,8 @@ public class Player
     public Player(Hashtable playerData)
 	{
 		_userId = (int)playerData["userId"];
-		_name = playerData["name"].ToString (); 
+		_name = playerData["name"].ToString ();
+		_userLevel = (int)playerData["level"];
 		_coins = (int)playerData["coins"];
 		_betAmt = (int)playerData["bet"];
 	}
@@ -43,6 +46,16 @@ public class Player
 	{
 		return _coins;
 	}
+
+	public int GetUserLvl()
+    {
+		return _userLevel;
+    }
+
+	public void LvlUp()
+    {
+		_userLevel++;
+    }
 
 	public void ChangeCoinAmount(int amount)
 	{

@@ -14,6 +14,7 @@ public class PlayerInfoLoader
 		mockPlayerData["name"] = "Player 1";
 		mockPlayerData["coins"] = 50;
 		mockPlayerData["bet"] = 5;
+		mockPlayerData["level"] = 1;
 
 		OnLoaded(mockPlayerData);
 	}

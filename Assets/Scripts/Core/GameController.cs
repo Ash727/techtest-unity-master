@@ -11,8 +11,10 @@ public class GameController : MonoBehaviour
 	public int playerBetValue;
 	private Text _nameLabel;
 	private Text _moneyLabel;
+	private Text _levelLabel;
+    private Text _freeCashAmt;
 
-    [SerializeField]
+	[SerializeField]
 	private ModalManager _modalManager;
 
 	private Player _player;
@@ -20,6 +22,8 @@ public class GameController : MonoBehaviour
     private TMPro.TMP_InputField _betAmounText;
 
     private Text _resultsText;
+    private int freeCashAmt = 10;
+
     public int PlayerBetValue { get =>_player.Bet;  private set {
 			_player.Bet = value;
 		} }
@@ -31,6 +35,10 @@ public class GameController : MonoBehaviour
 		_betAmountLabel = transform.Find ("Canvas/BetAmount").GetComponent<Text>();
 		_betAmounText = transform.Find("Canvas/BetAmount/BetInputField").GetComponent<TMPro.TMP_InputField>();
 		_resultsText = transform.Find ("Canvas/Winner").GetComponent<Text>();
+		_levelLabel = transform.Find ("Canvas/LevelLabel").GetComponent<Text>();
+		_freeCashAmt = transform.Find ("Canvas/GetCashButton/Text").GetComponent<Text>();
+		_freeCashAmt.text = $"Free Cash: x10";
+
 	}
 
 	void Start()
@@ -61,9 +69,10 @@ public class GameController : MonoBehaviour
     {
         _nameLabel.text = "Name: " + _player.GetName();
         _moneyLabel.text = "Money: $" + _player.GetCoins().ToString();
-		_betAmountLabel.text = $"${_player.Bet.ToString()}";
+		//_betAmountLabel.text = $"${_player.Bet.ToString()}";
 		//_player.Bet = int.TryParse( _betAmountLabel.text, out int value) ? value: PlayerBetValue;	
 		_betAmounText.text = ( $"{_player.Bet.ToString()}");
+		_levelLabel.text = $"Level: {_player.GetUserLvl().ToString()}";
 
 	}
 
@@ -98,6 +107,11 @@ public class GameController : MonoBehaviour
         UpdateGame(playerChoice, _player);
     }
 
+	public void GetFreeCash()
+    {
+		_player.ChangeCoinAmount(freeCashAmt);
+
+	}
 
 	public void AdjustBet(bool increase)
 	{
@@ -144,9 +158,10 @@ public class GameController : MonoBehaviour
 		enemyHand.text = DisplayResultAsText((UseableItem)gameUpdateData["resultOpponent"]);
 
 		_player.ChangeCoinAmount((int)gameUpdateData["coinsAmountChange"]);
-
-		//_resultsPanel.text = ((Result)gameUpdateData["drawResult"] == Result.Won) ? "Congratulations Player Wins": "Y";
 		_resultsText.text = UIResultMsg.GetResultMsg((Result)gameUpdateData["drawResult"], _resultsText);
+		LevelManager.CheckForLevelUp((Result)gameUpdateData["drawResult"], _player);
+		_freeCashAmt.text = $"Free Cash: x{gameUpdateData["freeCash"].ToString()}";
+		freeCashAmt = ((int)gameUpdateData["freeCash"]);
 	}
 	
 
