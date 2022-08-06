@@ -12,32 +12,35 @@ public class GameController : MonoBehaviour
 	private Text _nameLabel;
 	private Text _moneyLabel;
 	private Text _levelLabel;
-    private Text _freeCashAmt;
+	private Text _freeCashAmt;
+	private Text _roundTableLabel;
 
 	[SerializeField]
 	private ModalManager _modalManager;
-
+	[SerializeField]
+	private Unlockables unlockables;
 	private Player _player;
-    private Text _betAmountLabel;
-    private TMPro.TMP_InputField _betAmounText;
+	private Text _betAmountLabel;
+	private TMPro.TMP_InputField _betAmounText;
 
-    private Text _resultsText;
-    private int freeCashAmt = 10;
-
-    public int PlayerBetValue { get =>_player.Bet;  private set {
+	private Text _resultsText;
+	private int freeCashAmt = 10;
+	private int rounds = 1;
+	public int PlayerBetValue { get => _player.Bet; private set {
 			_player.Bet = value;
 		} }
 
-    void Awake()
+	void Awake()
 	{
-		_nameLabel = transform.Find ("Canvas/Name").GetComponent<Text>();
-		_moneyLabel = transform.Find ("Canvas/Money").GetComponent<Text>();
-		_betAmountLabel = transform.Find ("Canvas/BetAmount").GetComponent<Text>();
+		_nameLabel = transform.Find("Canvas/Name").GetComponent<Text>();
+		_moneyLabel = transform.Find("Canvas/Money").GetComponent<Text>();
+		_betAmountLabel = transform.Find("Canvas/BetAmount").GetComponent<Text>();
 		_betAmounText = transform.Find("Canvas/BetAmount/BetInputField").GetComponent<TMPro.TMP_InputField>();
-		_resultsText = transform.Find ("Canvas/Winner").GetComponent<Text>();
-		_levelLabel = transform.Find ("Canvas/LevelLabel").GetComponent<Text>();
-		_freeCashAmt = transform.Find ("Canvas/GetCashButton/Text").GetComponent<Text>();
+		_resultsText = transform.Find("Canvas/Winner").GetComponent<Text>();
+		_levelLabel = transform.Find("Canvas/LevelLabel").GetComponent<Text>();
+		_freeCashAmt = transform.Find("Canvas/GetCashButton/Text").GetComponent<Text>();
 		_freeCashAmt.text = $"Free Cash: x10";
+		_roundTableLabel = transform.Find("Canvas/RondTextTitle").GetComponent<Text>();
 
 	}
 
@@ -52,10 +55,10 @@ public class GameController : MonoBehaviour
 
 	void Update()
 	{
-		if (!_betAmounText.isFocused) { 
+		if (!_betAmounText.isFocused) {
 			UpdateHud();
 		} else
-        {
+		{
 			GetBetFromField();
 		}
 	}
@@ -66,49 +69,50 @@ public class GameController : MonoBehaviour
 	}
 
 	public void UpdateHud()
-    {
-        _nameLabel.text = "Name: " + _player.GetName();
-        _moneyLabel.text = "Money: $" + _player.GetCoins().ToString();
+	{
+		_nameLabel.text = "Name: " + _player.GetName();
+		_moneyLabel.text = "Money: $" + _player.GetCoins().ToString();
 		//_betAmountLabel.text = $"${_player.Bet.ToString()}";
 		//_player.Bet = int.TryParse( _betAmountLabel.text, out int value) ? value: PlayerBetValue;	
-		_betAmounText.text = ( $"{_player.Bet.ToString()}");
+		_betAmounText.text = ($"{_player.Bet.ToString()}");
 		_levelLabel.text = $"Level: {_player.GetUserLvl().ToString()}";
+		_roundTableLabel.text = $"Round:{rounds.ToString()}";
 
 	}
 
 	public void HandlePlayerInput(string item)
 	{
-		if(_player.Bet == 0)
-        {
+		if (_player.Bet == 0)
+		{
 			_modalManager.ShowModal(Modal.Types.BetZero);
 			return;
-        }
-        if (!_player.CanBet())
-        {
+		}
+		if (!_player.CanBet())
+		{
 			_modalManager.ShowModal(Modal.Types.InsufficantFundsModal);
 			return;
-        }
+		}
 
-        UseableItem playerChoice = UseableItem.None;
+		UseableItem playerChoice = UseableItem.None;
 
-        switch (item)
-        {
-            case "RockButton":
-                playerChoice = UseableItem.Rock;
-                break;
-            case "PaperButton":
-                playerChoice = UseableItem.Paper;
-                break;
-            case "ScissorsButton":
-                playerChoice = UseableItem.Scissors;
-                break;
-        }
+		switch (item)
+		{
+			case "RockButton":
+				playerChoice = UseableItem.Rock;
+				break;
+			case "PaperButton":
+				playerChoice = UseableItem.Paper;
+				break;
+			case "ScissorsButton":
+				playerChoice = UseableItem.Scissors;
+				break;
+		}
 
-        UpdateGame(playerChoice, _player);
-    }
+		UpdateGame(playerChoice, _player);
+	}
 
 	public void GetFreeCash()
-    {
+	{
 		_player.ChangeCoinAmount(freeCashAmt);
 
 	}
@@ -116,31 +120,31 @@ public class GameController : MonoBehaviour
 	public void AdjustBet(bool increase)
 	{
 		//if (_player.CanBet())
-        {
+		{
 			_player.AdustBet(increase);
-			
-        }
-      
-    }
+
+		}
+
+	}
 
 	public void GetBetFromField()
-    {		
-        if (string.IsNullOrWhiteSpace(_betAmounText.text))
-        {
-            Debug.Log("Was Null White space");
-            return;
-        }
-        else
-        {
-            int.TryParse(_betAmounText.text, out int bet);
-            if (bet<0)
-            {
+	{
+		if (string.IsNullOrWhiteSpace(_betAmounText.text))
+		{
+			Debug.Log("Was Null White space");
+			return;
+		}
+		else
+		{
+			int.TryParse(_betAmounText.text, out int bet);
+			if (bet < 0)
+			{
 				_betAmounText.text = "0";
 				bet = 0;
-            }
+			}
 			_player.Bet = bet;
 		}
-        
+
 	}
 
 	private void UpdateGame(UseableItem playerChoice, Player playerData)
@@ -149,7 +153,7 @@ public class GameController : MonoBehaviour
 		updateGameLoader.OnLoaded += OnGameUpdated;
 		updateGameLoader.Player = playerData;
 		updateGameLoader.load();
-			
+		unlockables.UnlockFeature(playerData.GetUserLvl());
 	}
 
 	public void OnGameUpdated(Hashtable gameUpdateData)
@@ -162,7 +166,19 @@ public class GameController : MonoBehaviour
 		LevelManager.CheckForLevelUp((Result)gameUpdateData["drawResult"], _player);
 		_freeCashAmt.text = $"Free Cash: x{gameUpdateData["freeCash"].ToString()}";
 		freeCashAmt = ((int)gameUpdateData["freeCash"]);
+		rounds++;
+		TakeScore(((Result)gameUpdateData["drawResult"]));
+
 	}
+
+	public void TakeScore(Result score)
+    {
+		var scoreBoard = FindObjectOfType<ScoreBoard>();
+        if (scoreBoard)
+        {
+			scoreBoard.GetScore(score);
+        }
+    }
 	
 
 	private string DisplayResultAsText (UseableItem result)

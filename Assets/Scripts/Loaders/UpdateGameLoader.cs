@@ -38,6 +38,7 @@ public class UpdateGameLoader
 		mockGameUpdate["coinsAmountChange"] = GetCoinsAmount(_choice, opponentHand);
 		mockGameUpdate["drawResult"] = _drawResult;
 		mockGameUpdate["freeCash"] = 10  * Player.GetUserLvl();
+		mockGameUpdate["round"] = 1;
 		OnLoaded(mockGameUpdate);
 	}
 

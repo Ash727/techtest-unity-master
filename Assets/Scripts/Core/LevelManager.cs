@@ -5,6 +5,7 @@ public static class LevelManager
 {
     public static int GameToWinNextLevel { get; set; } = 1;
     public static int NumOfGamesWon { get; set; } = 0;
+
     public static void CheckForLevelUp(Result result, Player player)
     {
         {
