@@ -11,9 +11,9 @@ public class GameController : MonoBehaviour
 	public int playerBetValue;
 	private Text _nameLabel;
 	private Text _moneyLabel;
-    
-	
-	public ModalManager modalManager;
+
+    [SerializeField]
+	private ModalManager _modalManager;
 
 	private Player _player;
     private Text _betAmountLabel;
@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour
 
 	void Start()
 	{
-		modalManager = FindObjectOfType<ModalManager>();
+		_modalManager = FindObjectOfType<ModalManager>();
 
 		PlayerInfoLoader playerInfoLoader = new PlayerInfoLoader();
 		playerInfoLoader.OnLoaded += OnPlayerInfoLoaded;
@@ -69,9 +69,14 @@ public class GameController : MonoBehaviour
 
 	public void HandlePlayerInput(string item)
 	{
+		if(_player.Bet == 0)
+        {
+			_modalManager.ShowModal(Modal.Types.BetZero);
+			return;
+        }
         if (!_player.CanBet())
         {
-			modalManager.ShowModal("InsufficantFundsModal");
+			_modalManager.ShowModal(Modal.Types.InsufficantFundsModal);
 			return;
         }
 

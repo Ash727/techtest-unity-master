@@ -4,16 +4,13 @@ using UnityEngine;
 
 public class Modal : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    /// <summary>
+    /// Enum types 
+    /// </summary>
+    public enum Types
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        InsufficantFundsModal,
+        BetZero
     }
 
     public void Close()

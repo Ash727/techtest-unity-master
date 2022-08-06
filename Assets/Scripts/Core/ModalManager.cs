@@ -6,13 +6,23 @@ using UnityEngine;
 public  class ModalManager : MonoBehaviour
 {
     [SerializeField]
-    private List<Modal> _modals;
+    private List<GameObject> _modals;
 
+    
 
    
-    public  void ShowModal(string modalName)
-    {
-      var modal = _modals.Find(modal => string.Equals(modal.gameObject.name, modalName));
-        modal.gameObject.SetActive(true);
+    public  void ShowModal(Modal.Types type)
+    { 
+        switch (type)
+        {
+            case Modal.Types.InsufficantFundsModal:
+                _modals[0].SetActive(true);
+                break;
+            case Modal.Types.BetZero:
+                _modals[1].SetActive(true);
+                break;
+            default:
+                break;
+        }
     }
 }
